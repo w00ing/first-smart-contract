@@ -1,10 +1,12 @@
 import { ethers } from "hardhat";
 import { GetContractTypeFromFactory } from "../typechain-types/common";
+import { WavePortal__factory } from "../typechain-types/factories/WavePortal__factory";
+import { WavePortal } from "../typechain-types/WavePortal";
 
 const main = async () => {
   const [owner, randomPerson] = await ethers.getSigners();
   const waveContractFactory = await ethers.getContractFactory("WavePortal");
-  const waveContract = await waveContractFactory.deploy();
+  const waveContract = (await waveContractFactory.deploy()) as WavePortal;
   await waveContract.deployed();
   console.log("Contract deployed to:", waveContract.address);
   console.log("Contract deployed by:", owner.address);
@@ -15,7 +17,7 @@ const main = async () => {
   const firstWaveTxn = await waveContract.wave();
   await firstWaveTxn.wait();
 
-  await waveContract.getTotalWaves();
+  const s = await waveContract.getTotalWaves();
 
   const secondWaveTxn = await waveContract.connect(randomPerson).wave();
 
